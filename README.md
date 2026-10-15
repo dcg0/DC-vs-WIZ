@@ -20,4 +20,10 @@ cd android
 ./gradlew assembleRelease
 ```
 
-El resultado se genera en `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para distribución, firma el APK con una clave Android.
+El resultado se genera en `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para
+distribución, firma el APK con una clave Android.
+
+
+Autor:  DC-Laboratory
+proyectos dc laboratorio un demo de la proxima entrega un juego recuerdo de recreativas de los 90 proximamente...
+Gracias esperenlo pronto 😂😎😏
