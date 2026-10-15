@@ -1,5 +1,5 @@
-![Imagen 1](https://github.com/user-attachments/assets/XXXXX-XXXXX)
-![Imagen 2](https://github.com/user-attachments/assets/YYYYY-YYYYY)
+![Imagen 1](Imagen%201.png)
+![Imagen 2](Imagen%202.png)
 
 # DC vs WIZKAS
 
