@@ -1,3 +1,6 @@
+![Imagen 1](https://github.com/user-attachments/assets/XXXXX-XXXXX)
+![Imagen 2](https://github.com/user-attachments/assets/YYYYY-YYYYY)
+
 # DC vs WIZKAS
 
 **DC laboratoriy**
