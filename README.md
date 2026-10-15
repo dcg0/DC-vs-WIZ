@@ -1,6 +1,7 @@
 ![Imagen 1](Imagen%201.png)
 ![Imagen 2](Imagen%202.png)
-
+🔗https://dcg0.github.io/DC-laboratory/
+🔗https://dcg0.github.io/DC-vs-WIZ/
 # DC vs WIZKAS
 
 **DC laboratoriy**
