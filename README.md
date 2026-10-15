@@ -1,6 +1,6 @@
 # DC vs WIZKAS
 
-**Arcade Tag Fighter · 2 vs 2**
+**DC laboratoriy**
 
 ## Jugar y descargar
 
