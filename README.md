@@ -4,7 +4,6 @@
 
 ## Jugar y descargar
 
-- [Abrir la página del juego](game/game.html)
 - [Descargar la APK para Android](https://github.com/dcg0/DC-vs-WIZ/releases/latest/download/DC-vs-WIZ.apk)
 - [Descargar el juego web](https://github.com/dcg0/DC-vs-WIZ/releases/latest/download/DC-vs-WIZ-web.zip)
 
