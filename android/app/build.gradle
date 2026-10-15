@@ -1,0 +1,11 @@
+plugins { id 'com.android.application' }
+
+android { namespace 'com.dcg0.dcvswiz'; compileSdk 35
+    defaultConfig { applicationId 'com.dcg0.dcvswiz'; minSdk 23; targetSdk 35; versionCode 1; versionName '1.0.0' }
+}
+
+tasks.register('syncGameAssets', Copy) {
+    from("$rootDir/../game")
+    into("$projectDir/src/main/assets")
+}
+tasks.named('preBuild').configure { dependsOn('syncGameAssets') }

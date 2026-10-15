@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b21">
+  <meta name="description" content="DC vs WIZKAS — Arcade Tag Fighter. Juega en la web o descarga la APK.">
+  <title>DC vs WIZKAS — Arcade Tag Fighter</title>
+  <style>
+    :root{--bg:#080a1b;--panel:#12162f;--cyan:#62efff;--pink:#ff4e9a;--yellow:#ffe66d;--text:#f4f5ff;--muted:#a7afd1}
+    *{box-sizing:border-box}body{margin:0;color:var(--text);font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 15% 0,#26366d 0,#0c1030 38%,var(--bg) 78%);min-height:100vh}
+    .wrap{max-width:1120px;margin:auto;padding:28px 20px 56px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:900;letter-spacing:.12em;color:var(--cyan);font-size:clamp(16px,3vw,24px)}.tag{color:var(--yellow);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center;padding:76px 0 54px}.kicker{color:var(--pink);font-weight:800;letter-spacing:.2em;text-transform:uppercase}.title{font-size:clamp(42px,8vw,88px);line-height:.92;margin:16px 0;background:linear-gradient(100deg,var(--cyan),#fff,var(--pink));-webkit-background-clip:text;color:transparent}.lead{font-size:clamp(17px,2.4vw,22px);color:var(--muted);max-width:620px;line-height:1.5}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 20px;border-radius:12px;color:#071024;text-decoration:none;font-weight:900;background:linear-gradient(135deg,var(--cyan),#a8f9ff);box-shadow:0 10px 30px #2ae5ff33}.btn.alt{background:linear-gradient(135deg,var(--pink),#ff9cc8);box-shadow:0 10px 30px #ff4e9a33}.btn.ghost{color:var(--text);background:#ffffff12;border:1px solid #ffffff2e;box-shadow:none}.poster{border:1px solid #ffffff2b;border-radius:26px;padding:10px;background:#ffffff0b;box-shadow:0 20px 80px #0008;transform:rotate(2deg)}.poster img{display:block;width:100%;border-radius:18px;max-height:430px;object-fit:cover}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{padding:22px;border:1px solid #ffffff1c;border-radius:18px;background:linear-gradient(145deg,#ffffff12,#ffffff05)}.card h3{margin:0 0 8px;color:var(--cyan)}.card p{margin:0;color:var(--muted);line-height:1.5}.foot{margin-top:48px;color:#7780a8;font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}.foot a{color:var(--cyan)}@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:50px}.poster{max-width:520px;margin:auto}.cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top"><div class="brand">DC VS WIZKAS</div><div class="tag">Arcade Tag Fighter · 2 vs 2</div></header>
+    <section class="hero">
+      <div><div class="kicker">Elige tu equipo</div><h1 class="title">Entra a la arena.</h1><p class="lead">Combates arcade, cadenas mágicas, hiper combos y personajes con estilo propio. Juega directamente en tu navegador o descarga la APK para Android.</p><div class="actions"><a class="btn" href="game/game.html">Jugar ahora</a><a class="btn alt" href="https://github.com/dcg0/DC-vs-WIZ/releases/latest/download/DC-vs-WIZ.apk">Descargar APK</a><a class="btn ghost" href="https://github.com/dcg0/DC-vs-WIZ/releases/latest/download/DC-vs-WIZ-web.zip">Descargar juego web</a></div></div>
+      <div class="poster"><img src="game/assets/portada.png" alt="DC vs WIZKAS"></div>
+    </section>
+    <section class="cards"><article class="card"><h3>2 vs 2</h3><p>Arma tu equipo, cambia de personaje y aprovecha las asistencias durante el combate.</p></article><article class="card"><h3>Personajes secretos</h3><p>Desbloquea variantes, jefes y tarjetas especiales con sorpresas en la selección.</p></article><article class="card"><h3>Hecho para arcade</h3><p>Controles táctiles, seis botones, música ROLA2 y una arena lista para jugar.</p></article></section>
+    <footer class="foot"><span>DC vs WIZKAS · versión remasterizada</span><span><a href="https://github.com/dcg0/DC-vs-WIZ">Código fuente en GitHub</a></span></footer>
+  </main>
+</body></html>
