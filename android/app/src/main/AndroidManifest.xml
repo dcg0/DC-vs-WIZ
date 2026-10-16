@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-  <application android:theme="@style/AppTheme" android:label="DC vs WIZKAS" android:icon="@drawable/logo" android:roundIcon="@drawable/logo" android:usesCleartextTraffic="true" android:hardwareAccelerated="true">
+  <application android:theme="@style/AppTheme" android:label="DC vs WIZKAS" android:icon="@drawable/logo" android:roundIcon="@drawable/logo" android:usesCleartextTraffic="false" android:hardwareAccelerated="true">
     <activity android:name=".MainActivity" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/>

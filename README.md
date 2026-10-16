@@ -1,4 +1,8 @@
 # clik enlace ala paguina del juego
+
+[![Deploy site to GitHub Pages](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml)
+[![Validate](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml)
 🔗https://dcg0.github.io/DC-vs-WIZ/
 # ve al enlace🤔🧐🙄 te lleva demo
 ![Imagen 1](Imagen%201.png)
@@ -25,6 +29,10 @@ cd android
 
 El resultado se genera en `android/app/build/outputs/apk/release/app-release-unsigned.apk`. Para
 distribución, firma el APK con una clave Android.
+
+## Seguridad
+
+Consulta [SECURITY.md](SECURITY.md) para informar vulnerabilidades de forma privada.
 
 
 Autor:  DC-Laboratory

@@ -1,0 +1,74 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    name: Validate static files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate HTML, JSON, and XML
+        run: |
+          python3 - <<'PY'
+          import json
+          import xml.etree.ElementTree as ET
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          class References(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.values = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  for key in ("src", "href"):
+                      if key in attrs:
+                          self.values.append((tag, key, attrs[key]))
+
+          errors = []
+          for page in (Path("index.html"), Path("game/game.html")):
+              parser = References()
+              parser.feed(page.read_text(encoding="utf-8"))
+              for tag, key, value in parser.values:
+                  parsed = urlparse(value)
+                  if not value or parsed.scheme or value.startswith(("/", "#")):
+                      continue
+                  target = page.parent / value
+                  if not target.exists():
+                      errors.append(f"{page}: missing {key} target for <{tag}>: {value}")
+
+          json.loads(Path("game/manus-routes.json").read_text(encoding="utf-8"))
+          for xml_file in (
+              Path("android/app/src/main/AndroidManifest.xml"),
+              Path("android/app/src/main/res/values/styles.xml"),
+          ):
+              ET.parse(xml_file)
+
+          if errors:
+              raise SystemExit("\n".join(errors))
+          print("Static validation passed")
+          PY
+
+  android:
+    name: Build Android debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble debug APK
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
