@@ -2368,6 +2368,8 @@ class Team {
     this.tagCooldown = Math.max(0, this.tagCooldown - 1);
 
     /* En 1v1 no hay compañero en reserva ni actor de asistencia. */
+    const active = this.active;
+    if (active) active.update(w, input);
 
     /* Combo del equipo */
     if (this.combo.timer > 0) {
