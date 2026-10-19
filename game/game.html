@@ -189,14 +189,14 @@
 
     <div id="screen-menu" class="screen hidden" data-testid="screen-menu">
       <div class="title">DC VS WIZKAS</div>
-      <div class="subtitle">— ARCADE TAG FIGHTER · 2 VS 2 —</div>
+      <div class="subtitle">— ARCADE TAG FIGHTER · 1 VS 1 —</div>
       <div class="menu" role="menu">
         <button data-testid="btn-arcade" data-action="arcade">ARCADE <span class="kbd">1</span></button>
         <button data-testid="btn-versus" data-action="versus">VERSUS 2P <span class="kbd">2</span></button>
         <button data-testid="btn-practice" data-action="practice">PRÁCTICA <span class="kbd">3</span></button>
         <button data-testid="btn-controls" data-action="controls">CONTROLES Y MOVIMIENTOS <span class="kbd">4</span></button>
       </div>
-      <div class="credit-line">6 BOTONES · CADENA MÁGICA · LANZADOR + SUPER SALTO · HIPER COMBOS · ASISTENCIAS 2V2</div>
+      <div class="credit-line">6 BOTONES · CADENA MÁGICA · LANZADOR + SUPER SALTO · HIPER COMBOS · COMBATE 1 VS 1</div>
     </div>
 
     <div id="screen-controls" class="screen hidden" data-testid="screen-controls">
@@ -208,7 +208,6 @@
             A / D mover · W saltar · S agacharse<br>
             <b>J</b> puñetazo débil · <b>K</b> medio · <b>L</b> fuerte<br>
             <b>U</b> patada débil · <b>I</b> media · <b>O</b> fuerte<br>
-            <b>Q</b> asistencia de compañero · <b>E</b> segunda asistencia<br>
             P pausa · ESC menú
           </div>
           <div class="col">
@@ -216,7 +215,6 @@
             ← / → mover · ↑ saltar · ↓ agacharse<br>
             <b>1</b> puñetazo débil · <b>2</b> medio · <b>3</b> fuerte<br>
             <b>4</b> patada débil · <b>5</b> media · <b>6</b> fuerte<br>
-            <b>7</b> asistencia · <b>8</b> segunda asistencia<br>
             Mando: A LP · B MP · Y HP · X LK · LB MK · RB HK
           </div>
         </div>
@@ -242,19 +240,16 @@
             <span>↓↙← + K : patada giratoria</span>
             <span>↓↙← + P : agarre imbloqueable</span>
             <span>←(carga) → + P : arremetida con armadura</span>
-            <span>↓ + HP : lanzador → ↑ para perseguir</span>
-            <span>↓ + HK : barrida que derriba</span>
+            <span>↓ + cualquier botón : proyectil normal horizontal</span>
+            <span>↑ + cualquier botón : proyectil diagonal ascendente</span>
           </div>
         </div>
         <div style="margin-top:1em;">
-          <h4>HIPER COMBOS Y EQUIPO</h4>
+          <h4>HIPER COMBOS</h4>
           <div class="grid-mv">
             <span>↓↘→ + P·P : hiper combo (Nv.1)</span>
             <span>↓↙← + K·K : furia (Nv.1)</span>
             <span>↓↘→↓↘→ + P : definitiva (Nv.3)</span>
-            <span>ASIST A + ASIST B : duo hyper (Nv.2)</span>
-            <span>LP + LK o HP + HK : relevo de personaje</span>
-            <span>Al bloquear + ASIST B : snap back (Nv.1)</span>
           </div>
         </div>
       </div>
@@ -262,15 +257,10 @@
     </div>
 
     <div id="screen-select" class="screen hidden" data-testid="screen-select">
-      <div class="title" style="font-size:clamp(1.3rem,3.4vw,2.4rem);">ELIGE TU EQUIPO 2 VS 2</div>
+      <div class="title" style="font-size:clamp(1.3rem,3.4vw,2.4rem);">ELIGE TU PERSONAJE 1 VS 1</div>
       <div class="ts-head" id="selectPrompt">JUGADOR 1</div>
       <div class="char-grid" id="charGrid"></div>
-      <div class="assist-row" id="assistRow"></div>
-      <div class="ts-row">
-        <div class="team-slots" id="teamSlots"></div>
-        <div class="other-team" id="otherTeam"></div>
-      </div>
-      <div class="hint" data-testid="select-hint">FLECHAS / CLIC PARA ELEGIR · Q/E/R ASISTENCIA · ENTER CONFIRMAR · ESC VOLVER</div>
+      <div class="hint" data-testid="select-hint">FLECHAS / CLIC PARA ELEGIR · ENTER CONFIRMAR · ESC VOLVER</div>
     </div>
 
     <div id="screen-result" class="screen hidden" data-testid="screen-result">
@@ -300,7 +290,7 @@
   <button class="deck-action deck-six" data-tk="u" aria-label="Patada débil">LK</button>
   <button class="deck-action deck-one" data-tk="i" aria-label="Patada media">MK</button>
   <button class="deck-action deck-two" data-tk="o" aria-label="Patada fuerte">HK</button>
-  <div class="deck-caption">JOYSTICK PARA MOVER · ABAJO + A/LP = PROYECTIL · ADELANTE + HP/R1 CON TANQUE LLENO = HIPER</div>
+  <div class="deck-caption">JOYSTICK PARA MOVER · ABAJO/ARRIBA + CUALQUIER BOTÓN = PROYECTIL · ADELANTE + HP/R1 CON TANQUE LLENO = HIPER</div>
 </section>
 
 <section class="music-control-row" aria-label="Control de música y asistencias">
@@ -308,12 +298,6 @@
     <img class="music-image" src="assets/icono.png" alt="">
     <span class="music-glyph" aria-hidden="true">♫</span><span class="music-label">ROLA2</span>
   </button>
-  <div class="assist-deck">
-    <button class="deck-chip" data-tk="q" aria-label="Asistencia A"><b>ASIST A</b><span>Q</span></button>
-    <button class="deck-chip" data-tk="e" aria-label="Asistencia B"><b>ASIST B</b><span>E</span></button>
-    <button class="deck-chip tag" data-tk="j" data-alt="u" aria-label="Relevo de personaje"><b>RELEVO</b><span>LP+LK</span></button>
-    <button class="deck-chip tag" data-tk="q" data-alt="e" aria-label="Duo hyper combo"><b>DUO</b><span>A+B</span></button>
-  </div>
   <button id="back-fab" type="button" aria-label="Volver al menú" hidden>
     <img class="back-image" src="assets/back-icon.png" alt="">
     <span class="back-glyph" aria-hidden="true">↩</span><span class="back-label">VOLVER</span>
@@ -752,6 +736,7 @@ const MIGUEL2_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDcAAAK0CAYAA
 const BANKS = {
   dc:     { frames: SPRITE_DATA.dc,      drawH: 306, feetPad: 8,  recolor: [[0.50, 0.74]] },
   dcnormal: { frames: SPRITE_DATA.dcnormal, drawH: 306, feetPad: 8, recolor: [] },
+  miguel1: { frames: [MIGUEL1_SRC], drawH: 430, feetPad: 8, recolor: [] },
   dcazul: { frames: Array.from({length: 6}, (_, i) => `assets/sprites/dcazul/dcazul-${i + 1}.png`), drawH: 306, feetPad: 5, recolor: [] },
   dcrojo: { frames: Array.from({length: 8}, (_, i) => `assets/sprites/dcrojo/dcrojo-${i + 1}.png`), drawH: 306, feetPad: 5, recolor: [] },
   /* WIZ y WIZZ comparten un banco de 7 poses; antes WIZ cargaba una sola imagen. */
@@ -808,7 +793,7 @@ const SELECT_PORTRAITS = {
 const POSE = {
   dcazul: {
     idle: 5, walk: [5, 2], crouch: 2, jump: 0, fall: 0,
-    sLP: 0, sMP: 3, sHP: 1, sLK: 4, sMK: 1, sHK: 2,
+    sLP: 0, sMP: 3, sHP: 1, sLK: 4, sMK: 5, sHK: 2,
     cLP: 2, cMP: 3, cHP: 1, cLK: 4, cMK: 1, cHK: 2,
     jLP: 0, jMP: 1, jHP: 4, jLK: 0, jMK: 1, jHK: 4,
     dashF: 1, dashB: 5, block: 5, blockLow: 2, blockAir: 0,
@@ -888,7 +873,7 @@ const POSE = {
   },
   wmistiko: {
     idle: 0, walk: [0, 5], crouch: 0, jump: 2, fall: 3,
-    sLP: 5, sMP: 0, sHP: 6, sLK: 2, sMK: 8, sHK: 2,
+    sLP: 5, sMP: 0, sHP: 6, sLK: 2, sMK: 8, sHK: 7,
     cLP: 5, cMP: 6, cHP: 4, cLK: 2, cMK: 8, cHK: 3,
     jLP: 5, jMP: 6, jHP: 4, jLK: 2, jMK: 8, jHK: 3,
     dashF: 5, dashB: 0, block: 0, blockLow: 0, blockAir: 2,
@@ -898,7 +883,7 @@ const POSE = {
   },
   wizznew: {
     idle: 0, walk: [0, 1], crouch: 0, jump: 2, fall: 3,
-    sLP: 1, sMP: 5, sHP: 1, sLK: 3, sMK: 4, sHK: 3,
+    sLP: 1, sMP: 5, sHP: 2, sLK: 3, sMK: 4, sHK: 6,
     cLP: 5, cMP: 1, cHP: 2, cLK: 3, cMK: 4, cHK: 3,
     jLP: 1, jMP: 5, jHP: 4, jLK: 3, jMK: 4, jHK: 3,
     dashF: 0, dashB: 1, block: 2, blockLow: 0, blockAir: 3,
@@ -933,7 +918,7 @@ const POSE = {
     specialP: 2, specialK: 7, hyper: 7, hyperAlt: 2,
     launcherP: 2, launcherK: 7, assistP: 1, assistK: 5, win: 0 },
   wero: { idle: 0, walk: [0, 1], crouch: 4, jump: 5, fall: 6,
-    sLP: 0, sMP: 1, sHP: 2, sLK: 3, sMK: 4, sHK: 5,
+    sLP: 1, sMP: 2, sHP: 3, sLK: 4, sMK: 5, sHK: 6,
     cLP: 4, cMP: 5, cHP: 6, cLK: 4, cMK: 5, cHK: 7,
     jLP: 1, jMP: 2, jHP: 7, jLK: 3, jMK: 5, jHK: 6,
     dashF: 1, dashB: 0, block: 0, blockLow: 4, blockAir: 5,
@@ -941,7 +926,7 @@ const POSE = {
     specialP: 2, specialK: 7, hyper: 7, hyperAlt: 2,
     launcherP: 2, launcherK: 7, assistP: 1, assistK: 5, win: 0 },
   yiyo: { idle: 0, walk: [0, 1], crouch: 4, jump: 5, fall: 6,
-    sLP: 0, sMP: 1, sHP: 2, sLK: 3, sMK: 4, sHK: 5,
+    sLP: 2, sMP: 3, sHP: 4, sLK: 5, sMK: 6, sHK: 7,
     cLP: 4, cMP: 5, cHP: 6, cLK: 4, cMK: 5, cHK: 7,
     jLP: 1, jMP: 2, jHP: 7, jLK: 3, jMK: 5, jHK: 6,
     dashF: 1, dashB: 0, block: 0, blockLow: 4, blockAir: 5,
@@ -1153,6 +1138,12 @@ function buildMoves(bank) {
   const P = POSE[bank];
   const set = normals(P);
 
+  // Los bancos de sprites tienen nombres propios, pero comparten familias de movimientos.
+  const profile = {
+    dcnormal: 'dc', dcazul: 'dc', dcrojo: 'dc', dcakuma: 'dc', crater: 'dc',
+    wiznew: 'wizz', mistikwiz: 'wizz', wizznew: 'wizz', wmistiko: 'wizz',
+    dcBlack: 'noir', miguel2: 'noir',
+  }[bank] || bank;
   const names = {
     dc:    { proj: 'ESFERA AZUL', rush: 'EMBESTIDA DC', rise: 'GANCHO RELÁMPAGO', spin: 'PATADA TORBELLINO', grab: 'AGARRE LAB', beam: 'TORMENTA AZUL', rushH: 'FURIA DC', ult: 'DESTELLO FINAL' },
     wizz:  { proj: 'BALA ROJA', rush: 'CARGA WIZZ', rise: 'GANCHO TRUENO', spin: 'PATADA RÁPIDA', grab: 'AGARRE CALLE', beam: 'RÁFAGA ROJA', rushH: 'FURIA WIZZ', ult: 'TORMENTA CARMESÍ' },
@@ -1161,24 +1152,24 @@ function buildMoves(bank) {
     toto: { proj: 'GOLPE TOTO', rush: 'EMBESTIDA TOTO', rise: 'GANCHO TOTO', spin: 'PATADA TOTO', grab: 'AGARRE TOTO', beam: 'TORMENTA TOTO', rushH: 'FURIA TOTO', ult: 'FINAL TOTO' },
     wero: { proj: 'RAYO WERO', rush: 'EMBESTIDA WERO', rise: 'GANCHO WERO', spin: 'PATADA WERO', grab: 'AGARRE WERO', beam: 'TORMENTA WERO', rushH: 'FURIA WERO', ult: 'FINAL WERO' },
     yiyo: { proj: 'RAYO YIYO', rush: 'EMBESTIDA YIYO', rise: 'GANCHO YIYO', spin: 'PATADA YIYO', grab: 'AGARRE YIYO', beam: 'TORMENTA YIYO', rushH: 'FURIA YIYO', ult: 'FINAL YIYO' },
-  }[bank];
+  }[profile];
 
-  const tint = { dc: '#39a7ff', wizz: '#ff3b52', noir: '#6f5bff', manuelin: '#31a9ff', toto: '#ffd21f', wero: '#ff4d9a', yiyo: '#ff8a35' }[bank];
+  const tint = { dc: '#39a7ff', wizz: '#ff3b52', noir: '#6f5bff', manuelin: '#31a9ff', toto: '#ffd21f', wero: '#ff4d9a', yiyo: '#ff8a35' }[profile];
 
-  /* QCF + P → proyectil de energía */
+  /* Abajo + cualquier botón → proyectil normal horizontal. */
   set.spProj = special({
     id: 'spProj', name: names.proj, pose: P.specialP, startup: 12, active: 6, recovery: 24,
     damage: 13, hitstun: 20, blockstun: 13, hitstop: 6, meter: 5, color: tint,
     fx: 'orb', sfx: 'fireball', invuln: 0, cmd: 'qcfP',
     boxes: [], proj: {
-      vx: 9.2, w: 66, h: 54, y: -140, damage: 13, hitstun: 20, blockstun: 13, hitstop: 6,
+      vx: 9.2, vy: 0, w: 66, h: 54, y: -140, damage: 13, hitstun: 20, blockstun: 13, hitstop: 6,
       color: tint, life: 150, level: 'mid', pierce: 0,
     },
-    label: '↓↘→ + P',
+    label: '↓ + CUALQUIER BOTÓN',
   });
 
-  /* Arriba + LP/J: proyectil vertical azul oscuro. */
-  set.spProjUp = special({ id: 'spProjUp', name: 'LANZA AZUL OSCURA', pose: P.specialP, startup: 8, active: 6, recovery: 20, damage: 16, hitstun: 22, blockstun: 14, hitstop: 7, meter: 6, color: '#123b9a', fx: 'orb', sfx: 'fireball', boxes: [], proj: { vx: 0, vy: -12.5, w: 34, h: 118, y: -140, damage: 16, hitstun: 22, blockstun: 14, hitstop: 7, color: '#123b9a', life: 58, level: 'overhead', vertical: true }, label: '↑ + LP' });
+  /* Arriba + cualquier botón → proyectil diagonal ascendente. */
+  set.spProjUp = special({ id: 'spProjUp', name: 'LANZA AZUL OSCURA', pose: P.specialP, startup: 8, active: 6, recovery: 20, damage: 16, hitstun: 22, blockstun: 14, hitstop: 7, meter: 6, color: '#123b9a', fx: 'orb', sfx: 'fireball', boxes: [], proj: { vx: 9.2, vy: -3.8, w: 66, h: 54, y: -140, damage: 16, hitstun: 22, blockstun: 14, hitstop: 7, color: '#123b9a', life: 150, level: 'mid' }, label: '↑ + CUALQUIER BOTÓN' });
   /* QCF + K → embestida que avanza */
   set.spRush = special({
     id: 'spRush', name: names.rush, pose: P.specialK, startup: 10, active: 7, recovery: 20,
@@ -1273,7 +1264,8 @@ const ASSIST_TYPES = {
 
 function assistMove(bank, type) {
   const P = POSE[bank];
-  const tint = { dc: '#39a7ff', wizz: '#ff3b52', noir: '#6f5bff' }[bank];
+  const profile = { dcnormal: 'dc', dcazul: 'dc', dcrojo: 'dc', dcakuma: 'dc', crater: 'dc', wiznew: 'wizz', mistikwiz: 'wizz', wizznew: 'wizz', wmistiko: 'wizz', dcBlack: 'noir' }[bank] || bank;
+  const tint = { dc: '#39a7ff', wizz: '#ff3b52', noir: '#6f5bff' }[profile];
   if (type === 'a') {
     return special({
       id: 'asProj', name: 'ASISTENCIA PROYECTIL', pose: P.assistP, startup: 12, active: 4, recovery: 26,
@@ -1301,9 +1293,12 @@ function assistMove(bank, type) {
 }
 
 const MOVES = {
-  dc: buildMoves('dc'), wizz: buildMoves('wizz'), noir: buildMoves('noir'),
-  manuelin: buildMoves('manuelin'), toto: buildMoves('toto'),
-  wero: buildMoves('wero'), yiyo: buildMoves('yiyo'),
+  dc: buildMoves('dc'), dcnormal: buildMoves('dc'), dcazul: buildMoves('dcazul'),
+  dcrojo: buildMoves('dcrojo'), dcakuma: buildMoves('dcakuma'), crater: buildMoves('crater'),
+  wiznew: buildMoves('wiznew'), wizz: buildMoves('wizz'), wizznew: buildMoves('wizznew'),
+  mistikwiz: buildMoves('mistikwiz'), wmistiko: buildMoves('wmistiko'),
+  noir: buildMoves('noir'), miguel2: buildMoves('miguel2'),
+  manuelin: buildMoves('manuelin'), toto: buildMoves('toto'), wero: buildMoves('wero'), yiyo: buildMoves('yiyo'),
 };
 /* Miguel 1 jugable: no tiene golpes, combos, especiales ni hipercombos.
  * Su único botón ofensivo es LP/A y dispara un rayo rojo imbloqueable. */
@@ -1322,7 +1317,8 @@ const MIGUEL1_MOVES = {
 };
 function movesFor(charId) {
   if (charId === 'miguel1') return MIGUEL1_MOVES;
-  return MOVES[CHAR[charId].bank] || MOVES.noir;
+  const bank = CHAR[charId].bank;
+  return MOVES[bank] || MOVES[bank === 'dcnormal' ? 'dc' : 'noir'];
 }
 function assistsFor(charId) {
   /* Miguel 1 no puede atacar como asistente: solo movimiento y rayo propio. */
@@ -1545,8 +1541,9 @@ class Fighter {
       const button = /(?:^|[^a-z])(lp|mp|hp|lk|mk|hk)(?:$|[^a-z])/.exec(key)?.[1]
         || /(?:lp|mp|hp|lk|mk|hk)/.exec(key)?.[0];
       const byButton = {
-        lp: [0, 1, 0], mp: [1, 5, 1], hp: [5, 2, 5],
-        lk: [3, 0, 3], mk: [4, 3, 4], hk: [3, 4, 5],
+        // Cada botón recorre tres poses distintas para que nunca parezca congelado.
+        lp: [0, 1, 2], mp: [1, 2, 3], hp: [2, 3, 4],
+        lk: [3, 4, 5], mk: [4, 5, 0], hk: [5, 0, 1],
       };
       if (/hy/.test(key)) return [6, 6, 6, 2];
       if (/sp|launcher|assist/.test(key)) return [2, 6, 5, 4];
@@ -1559,9 +1556,13 @@ class Fighter {
     const mysticAttack = (m) => {
       const id = String(m?.id || '').toLowerCase();
       const hyper = /hy/.test(id);
-      const kick = /lk|mk|hk/.test(id);
       const magic = /sp|launcher|assist/.test(id);
-      const seq = hyper ? [1] : (magic ? [4, 6, 7, 3] : (kick ? [2, 8, 2, 3] : [5, 0, 5, 6]));
+      const button = /(?:lp|mp|hp|lk|mk|hk)/.exec(id)?.[0];
+      const byButton = {
+        lp: [5, 0, 6, 1], mp: [0, 6, 1, 5], hp: [6, 1, 5, 0],
+        lk: [2, 8, 3, 7], mk: [8, 3, 7, 2], hk: [3, 7, 2, 8],
+      };
+      const seq = hyper ? [1] : (magic ? [4, 6, 7, 3] : (byButton[button] || [5, 0, 6, 1]));
       return seq[Math.floor(this.moveFrame / 3) % seq.length];
     };
     const wizAttack = (m) => {
@@ -1590,7 +1591,28 @@ class Fighter {
         if (normalWizz) return wizzAttack(m);
         if (mystic) return mysticAttack(m);
         const pose = typeof m.pose === 'number' ? m.pose : P[m.pose];
-        return pose === undefined ? scalar('idle') : pose;
+        if (pose === undefined) return scalar('idle');
+        // Los bancos tradicionales tienen una pose por golpe. Animamos la entrada,
+        // el impacto y la salida usando el idle como transición; así cada botón
+        // produce movimiento visible aunque el banco no tenga una tira de frames.
+        const idle = scalar('idle');
+        const id = String(m?.id || '').toLowerCase();
+        const button = /(?:lp|mp|hp|lk|mk|hk)/.exec(id)?.[0];
+        const buttonIndex = { lp: 0, mp: 1, hp: 2, lk: 3, mk: 4, hk: 5 }[button] ?? 0;
+        const stance = id.startsWith('c') ? 'c' : (id.startsWith('j') ? 'j' : 's');
+        const frameCount = Math.max(1, Art.get(this.charId).frames.length);
+        // Cada botón recibe una entrada y una salida diferentes, incluso cuando
+        // la tabla POSE comparte el mismo frame de impacto (cLP/cLK, jMP/jMK, etc.).
+        // El desplazamiento depende de postura y botón, y siempre queda dentro
+        // del banco real del personaje.
+        const stanceOffset = stance === 'c' ? 2 : (stance === 'j' ? 4 : 0);
+        let entryPose = (buttonIndex + stanceOffset) % frameCount;
+        let exitPose = (buttonIndex + stanceOffset + 2) % frameCount;
+        if (entryPose === pose) entryPose = (entryPose + 1) % frameCount;
+        if (exitPose === pose || exitPose === entryPose) exitPose = (exitPose + 1) % frameCount;
+        if (frameCount === 1) return pose;
+        const seq = [entryPose, pose, exitPose, entryPose];
+        return seq[Math.floor(this.moveFrame / 3) % seq.length];
       }
       default: return wiz ? wizIdle() : (normalWizz ? wizzIdle() : (mystic ? mysticIdle() : scalar('idle')));
     }
@@ -1815,7 +1837,6 @@ class Fighter {
       const forwardHeld = facing === 1 ? d.right : d.left;
       if (onGround && forwardHeld && tap.hp && m.hyBeam) { mb.clear(); return { id: 'hyBeam' }; }
       if (onGround && forwardHeld && tap.hk && m.hyRush) { mb.clear(); return { id: 'hyRush' }; }
-      if (tap.assistA && tap.assistB && team.gauge >= SUPER_LEVEL * 2 && team.canDuo()) return { id: 'hyDuo' };
       if ((mb.doubleQcf() || (onGround && d.down === false)) && atkCount >= 2 && tap.hp && mb.doubleQcf()) return { id: 'hyUlt' };
       if ((tap.lp && tap.mp) || (tap.mp && tap.hp)) {
         if (mb.qcf() || mb.match([2, 3, 6], 26)) { mb.clear(); return { id: 'hyBeam' }; }
@@ -1830,10 +1851,15 @@ class Fighter {
     const pTap = tap.lp || tap.mp || tap.hp;
     const kTap = tap.lk || tap.mk || tap.hk;
     if (onGround) {
-      /* Proyectil deliberado: abajo + A (LP). No se activa por un cuarto
-       * de círculo antiguo que haya quedado en el buffer. */
-      if (d.up && tap.lp) { mb.clear(); return { id: 'spProjUp' }; }
-      if (d.down && tap.lp) { mb.clear(); return { id: 'spProj' }; }
+      /* Proyectiles directos: un toque de joystick arriba/abajo + cualquier botón.
+       * El buffer breve de abajo permite pulsar dirección y botón consecutivamente;
+       * después del buffer, mantener abajo vuelve a dejar disponibles cLP/cMP/cHP/
+       * cLK/cMK/cHK. */
+      const anyAttackTap = pTap || kTap;
+      const downProjectile = d.down && anyAttackTap
+        && (input.tapDir.down || world.frame - this.lastTap.down <= 12);
+      if (d.up && anyAttackTap) { mb.clear(); return { id: 'spProjUp' }; }
+      if (downProjectile) { mb.clear(); return { id: 'spProj' }; }
       if (kTap && freshQcf) { mb.clear(); return { id: 'spRush' }; }
       if (pTap && freshDp) { mb.clear(); return { id: 'spRise' }; }
       if (kTap && freshQcb) { mb.clear(); return { id: 'spSpin' }; }
@@ -2288,8 +2314,15 @@ class Projectile {
     g.globalCompositeOperation = 'lighter';
     g.shadowColor = this.color; g.shadowBlur = 26;
     g.fillStyle = this.color;
-    g.beginPath(); if (this.vertical) g.rect(this.x-this.w*.24,this.y-this.h*.5,this.w*.48,this.h); else g.ellipse(this.x,this.y,this.w*.42,this.h*.42,0,0,Math.PI*2); g.fill();
-    g.globalAlpha=0.9; g.fillStyle=this.vertical?'#8fc8ff':'#fff'; g.beginPath(); g.ellipse(this.x,this.y,this.vertical?this.w*.12:this.w*.2,this.vertical?this.h*.28:this.h*.2,0,0,Math.PI*2); g.fill();
+    g.translate(this.x, this.y);
+    if (this.vertical) {
+      g.beginPath(); g.rect(-this.w*.24, -this.h*.5, this.w*.48, this.h); g.fill();
+    } else {
+      g.rotate(Math.atan2(this.vy, this.vx || this.facing));
+      g.beginPath(); g.ellipse(0, 0, this.w*.42, this.h*.42, 0, 0, Math.PI*2); g.fill();
+    }
+    g.globalAlpha=0.9; g.fillStyle=this.vertical?'#8fc8ff':'#fff'; g.beginPath();
+    g.ellipse(0, 0, this.vertical?this.w*.12:this.w*.2, this.vertical?this.h*.28:this.h*.2, 0, 0, Math.PI*2); g.fill();
     g.restore();
   }
 }
@@ -2303,7 +2336,7 @@ class Team {
     this.isCPU = !!opts.isCPU;
     this.picks = picks;
     this.members = picks.map((p, i) => new Fighter(this, p.charId, i));
-    this.assistType = picks.map((p) => p.assist || 'a');
+    this.assistType = [];
     this.activeIndex = 0;
     this.gauge = opts.gauge || 0;
     this.tagCooldown = 0;
@@ -2316,10 +2349,10 @@ class Team {
   }
   get active() { return this.members[this.activeIndex]; }
   get partnerIndex() { return this.activeIndex === 0 ? 1 : 0; }
-  get partner() { return this.members[this.partnerIndex]; }
+  get partner() { return null; }
   get aliveMembers() { return this.members.filter((m) => m.alive); }
   get defeated() { return this.members.every((m) => !m.alive); }
-  canDuo() { return this.partner.alive && this.gauge >= SUPER_LEVEL * 2; }
+  canDuo() { return false; }
 
   reset(x, facing) {
     this.activeIndex = 0;
@@ -2334,39 +2367,7 @@ class Team {
     const w = this.world;
     this.tagCooldown = Math.max(0, this.tagCooldown - 1);
 
-    /* Recuperación de vida roja del compañero en reserva */
-    for (let i = 0; i < this.members.length; i++) {
-      const m = this.members[i];
-      if (i === this.activeIndex || !m.alive) continue;
-      if (m.redHp > 0) {
-        const r = Math.min(m.redHp, m.maxHp - m.hp, 0.085);
-        m.hp += r;
-        m.redHp = Math.max(0, m.redHp - r * 1.2);
-      }
-      m.invuln = Math.max(0, m.invuln - 1);
-    }
-
-    /* El luchador activo siempre puede seguir al rival */
-    const act = this.active;
-    if (act) act.update(w, input);
-
-    /* Actor de asistencia */
-    if (this.assistActor) {
-      const a = this.assistActor;
-      a.update(w, null);
-      a.life--;
-      if (a.move) {
-        a.moveFrame++;
-        if (a.moveFrame >= a.move.startup + a.move.active + a.move.recovery) a.move = null;
-      }
-      /* El asistente comparte la vida real de su compañero en reserva. */
-      if (a.hp <= 0) { this.partner.hp = 0; this.partner.redHp = 0; }
-      else { this.partner.hp = a.hp; this.partner.redHp = a.redHp; }
-      if (!a.alive || a.life <= 0 || a.state === STATE.KO || a.state === STATE.HITSTUN || a.state === STATE.KNOCKDOWN) {
-        this.assistActor = null;
-        this.calledAssist = false;
-      }
-    }
+    /* En 1v1 no hay compañero en reserva ni actor de asistencia. */
 
     /* Combo del equipo */
     if (this.combo.timer > 0) {
@@ -2631,7 +2632,7 @@ class World {
   }
 
   setupBoss() {
-    /* Miguel, jefe final grande: una ronda para cada forma recibida. */
+    /* Miguel, jefe final grande: en 1v1 no hay ayudante ni personaje de reserva. */
     const t = this.teams[2];
     const f = t.members[0];
     f.charId = this.bossId;
@@ -2639,24 +2640,7 @@ class World {
     f.maxHp = this.bossId === 'miguel1' ? 280 : 460;
     f.hp = f.maxHp;
     f.isBoss = true;
-    if (this.bossId === 'miguel1' || this.bossId === 'miguel2') {
-      const helper = t.members[1];
-      helper.charId = 'crater';
-      helper.isBoss = false;
-      helper.maxHp = Math.round(LIFE * 0.20);
-      helper.hp = helper.maxHp;
-      helper.redHp = 0;
-      helper.x = 1040;
-      helper.y = GROUND_Y;
-      helper.prevX = helper.x;
-      helper.prevY = helper.y;
-      helper.onGround = true;
-      helper.state = STATE.IDLE;
-      /* Crater ayuda a Miguel 2 con la dificultad mínima activa. */
-      t.helperAiDiff = this.bossId === 'miguel2' ? 0.10 : 0.85;
-    } else {
-      t.members[1].hp = 0; t.members[1].maxHp = 0;
-    }
+    t.helperAiDiff = 0;
     this.timer = this.bossId === 'miguel2' ? 24 : 20;
     this.timerMax = this.timer;
     if (this.bossId === 'miguel1') this.bossCharge = { frames: 0, required: 360, delay: 90, buttons: 'HP + HK' };
@@ -3008,15 +2992,6 @@ class World {
         this.finish(side === 1 ? 2 : 1, 'K.O.');
         return;
       }
-      /* relevo automático si el activo cae y aún hay compañero */
-      if (!t.active.alive && t.partner.alive && t.active.state === STATE.KO && t.active.stateFrame > 40) {
-        t.activeIndex = t.partnerIndex;
-        const inc = t.active;
-        inc.state = STATE.TAGIN; inc.stateFrame = 0; inc.invuln = 20;
-        inc.x = clamp(inc.x, WALL_L, WALL_R);
-        t.tagCooldown = 40;
-        this.announce('RELEVO FORZADO', 1.2);
-      }
     }
   }
 
@@ -3142,45 +3117,6 @@ const HUD = {
     g.fillText(act.char.name, left ? x + 6 : x + barW - 6, y - 8);
     g.restore();
 
-    /* Compañero en reserva */
-    const pIdx = team.partnerIndex;
-    const p = team.members[pIdx];
-    const sbW = 250, sbH = 14;
-    const sx = left ? x + 4 : x + barW - 4 - sbW;
-    const sy = y + barH + 8;
-    g.save();
-    g.fillStyle = 'rgba(4,6,20,0.86)';
-    this.rect(g, sx, sy, sbW, sbH, 4); g.fill();
-    const pHp = clamp(p.hp / Math.max(1, p.maxHp), 0, 1);
-    const pRed = clamp((p.hp + p.redHp) / Math.max(1, p.maxHp), 0, 1);
-    const seg = (pct, fill) => {
-      const w = sbW * pct;
-      g.save(); this.rect(g, sx, sy, sbW, sbH, 4); g.clip();
-      if (left) g.fillRect(sx, sy, w, sbH); else g.fillRect(sx + sbW - w, sy, w, sbH);
-      g.restore();
-    };
-    g.fillStyle = '#7a1028'; seg(pRed);
-    g.fillStyle = p.alive ? '#5ad4ff' : '#555'; seg(pHp);
-    g.strokeStyle = 'rgba(255,255,255,0.6)'; g.lineWidth = 1.6;
-    this.rect(g, sx, sy, sbW, sbH, 4); g.stroke();
-    g.font = '900 13px Impact, sans-serif';
-    g.fillStyle = p.alive ? '#cfe9ff' : '#888';
-    g.textAlign = left ? 'left' : 'right';
-    g.strokeStyle = '#000'; g.lineWidth = 3;
-    const tag = `${p.char.name} · ${ASSIST_TYPES[team.assistType[pIdx]].tag}`;
-    g.strokeText(tag, left ? sx + 4 : sx + sbW - 4, sy + sbH + 15);
-    g.fillText(tag, left ? sx + 4 : sx + sbW - 4, sy + sbH + 15);
-    g.restore();
-
-    /* Aviso de asistencia disponible */
-    if (team.assistActor || team.tagCooldown > 0) {
-      g.save();
-      g.font = '900 14px Impact, sans-serif';
-      g.fillStyle = team.assistActor ? '#ffd21f' : '#8fe6ff';
-      g.textAlign = left ? 'left' : 'right';
-      g.fillText(team.assistActor ? 'ASISTENCIA EN PANTALLA' : 'ASIST OK!', left ? sx : sx + sbW, sy - 6);
-      g.restore();
-    }
   },
 
   drawGauge(g, team, side) {
@@ -3565,18 +3501,22 @@ const Game = {
   stage: 0,
   wins: 0,
   losses: 0,
+  arcadeComplete: false,
   paused: false,
-  p1: { picks: [], step: 0, assist: 'a', focus: 0 },
-  p2: { picks: [], step: 0, assist: 'a', focus: 0 },
+  p1: { picks: [], step: 0, focus: 0 },
+  p2: { picks: [], step: 0, focus: 0 },
   selectSide: 1,
   result: null,
   practiceDummy: true,
 
   reset() {
-    this.p1 = { picks: [], step: 0, assist: 'a', focus: 0 };
-    this.p2 = { picks: [], step: 0, assist: 'a', focus: 0 };
+    this.p1 = { picks: [], step: 0, focus: 0 };
+    this.p2 = { picks: [], step: 0, focus: 0 };
     this.selectSide = 1;
     this.stage = 0;
+    this.wins = 0;
+    this.losses = 0;
+    this.arcadeComplete = false;
     this.world = null;
   },
 
@@ -3589,7 +3529,7 @@ const Game = {
   },
 
   cpuPicks(route) {
-    return route.chars.map((c, i) => ({ charId: c, assist: route.assists[i] }));
+    return [{ charId: route.chars[0] }];
   },
 
   beginFight() {
@@ -3616,7 +3556,7 @@ const Game = {
       opts.gauge1 = Math.min(MAX_SUPER_LEVELS * SUPER_LEVEL, this.wins * SUPER_LEVEL * 1.5);
       opts.gauge2 = route.boss ? 0 : 0;
     } else if (this.mode === 'practice') {
-      picks2 = [{ charId: 'wz', assist: 'a' }, { charId: 'dc', assist: 'b' }];
+      picks2 = [{ charId: 'wz' }];
       diff = 0;
     } else {
       picks2 = this.p2.picks.slice();
@@ -3651,30 +3591,6 @@ const Game = {
         out[side] = Input.read(KEYMAP_P2, true, 2);
       } else {
         out[side] = Input.read(side === 1 ? KEYMAP_P1 : KEYMAP_P2, true, side);
-      }
-    }
-    /* asistencias y relevos */
-    for (const side of [1, 2]) {
-      const t = w.teams[side];
-      const inp = out[side];
-      if (!inp) continue;
-      if (inp.tap && inp.tap.assistA && inp.tap.assistB) {
-        if (t.gauge >= SUPER_LEVEL * 2 && t.canDuo() && t.active.onGround && t.active.canAct()) {
-          t.active.startMove(w, { id: 'hyDuo' });
-        } else { t.requestTag(); }
-        inp.tap.assistA = inp.tap.assistB = false;
-      } else if (inp.tap && inp.tap.assistA) {
-        if (!t.active.isStunned() && !t.active.isAttacking()) t.requestAssist('a');
-        inp.tap.assistA = false;
-      } else if (inp.tap && inp.tap.assistB) {
-        if (t.active.state === STATE.BLOCKSTUN) { t.snapBack(); }
-        else if (!t.active.isStunned() && !t.active.isAttacking()) t.requestAssist('b');
-        inp.tap.assistB = false;
-      }
-      /* relevo: HP+HK en el aire o LP+LK en el suelo */
-      if (inp.tap) {
-        const tagCombo = (inp.tap.hp && inp.tap.hk) || (inp.tap.lp && inp.tap.lk);
-        if (tagCombo && !inp._ai) { t.requestTag(); inp.tap.hp = inp.tap.hk = inp.tap.lp = inp.tap.lk = false; }
       }
     }
     return out;
@@ -3744,7 +3660,7 @@ const Game = {
     }
     if (this.mode === 'versus') {
       const txt = w.winner === 0 ? 'EMPATE' : (w.winner === 1 ? 'JUGADOR 1 GANA' : 'JUGADOR 2 GANA');
-      this.showResult(w.result, [txt, ...(firstMiguel1Win ? ['¡MIGUEL 1 DESBLOQUEADO POR GANAR CON TOTO!'] : []), `P1: ${this.p1.picks.map((p) => CHAR[p.charId].name).join(' + ')}`, `P2: ${this.p2.picks.map((p) => CHAR[p.charId].name).join(' + ')}`]);
+      this.showResult(w.result, [txt, ...(firstMiguel1Win ? ['¡MIGUEL 1 DESBLOQUEADO POR GANAR CON TOTO!'] : []), `P1: ${this.p1.picks.map((p) => CHAR[p.charId].name).join('')}`, `P2: ${this.p2.picks.map((p) => CHAR[p.charId].name).join('')}`]);
     }
   },
 
@@ -3752,7 +3668,7 @@ const Game = {
     $('resultTitle').textContent = title;
     $('resultStats').innerHTML = lines.map((l) => `<div>${l}</div>`).join('');
     const cont = $('btn-continue');
-    cont.textContent = (this.mode === 'arcade' && this.world && this.world.winner === 1 && this.stage < arcadeRoute().length && this.stage > 0) ? 'SIGUIENTE COMBATE' : 'JUGAR OTRA VEZ';
+    cont.textContent = this.arcadeComplete ? 'VOLVER AL MENÚ' : ((this.mode === 'arcade' && this.world && this.world.winner === 1 && this.stage < arcadeRoute().length && this.stage > 0) ? 'SIGUIENTE COMBATE' : 'JUGAR OTRA VEZ');
     setScreen('result');
     Audio.sfx.ok();
   },
@@ -3846,6 +3762,7 @@ const Game = {
   },
 
   finishMysticUnlock() {
+    this.arcadeComplete = true;
     const already = isMysticUnlocked();
     unlockMystic();
     const finish = () => this.showResult('¡VICTORIA TOTAL!', [
@@ -3887,8 +3804,8 @@ function renderSelect() {
   const side = Game.selectSide;
   const state = side === 1 ? Game.p1 : Game.p2;
   $('selectPrompt').textContent = side === 1
-    ? `JUGADOR 1 · ELIGE PERSONAJE ${state.picks.length + 1} DE 2`
-    : `JUGADOR 2 · ELIGE PERSONAJE ${state.picks.length + 1} DE 2`;
+    ? 'JUGADOR 1 · ELIGE PERSONAJE'
+    : 'JUGADOR 2 · ELIGE PERSONAJE';
   grid.innerHTML = '';
   ROSTER.forEach((c, idx) => {
     const lockedMystic = c.id === 'wzm' && !isMysticUnlocked();
@@ -3944,29 +3861,6 @@ function renderSelect() {
   randomCard.innerHTML = '<div style="position:absolute;inset:0;display:grid;place-items:center;padding-bottom:26px;color:#ffd21f;font:900 clamp(48px,7vw,88px) Impact,sans-serif;text-shadow:0 4px 0 #000,0 0 18px #ff6a2a;">?</div><div class="cname">RANDOM</div>';
   randomCard.onclick = () => { state.focus = randomIdx; confirmPick(); };
   grid.appendChild(randomCard);
-  /* asistencias disponibles para el personaje enfocado */
-  const at = $('assistRow');
-  if (at) {
-    at.innerHTML = '';
-    Object.values(ASSIST_TYPES).forEach((t) => {
-      const b = document.createElement('button');
-      b.className = 'assist-btn' + (state.assist === t.key ? ' active' : '');
-      b.innerHTML = `<b>${t.key.toUpperCase()}</b><span>${t.tag}</span><small>${t.desc}</small>`;
-      b.onclick = () => { state.assist = t.key; Audio.sfx.menu(); renderSelect(); };
-      at.appendChild(b);
-    });
-  }
-  const teamEl = $('teamSlots');
-  if (teamEl) {
-    teamEl.innerHTML = '';
-    for (let i = 0; i < 2; i++) {
-      const p = state.picks[i];
-      const d = document.createElement('div');
-      d.className = 'slot' + (p ? ' filled' : '');
-      d.innerHTML = p ? `<b>${CHAR[p.charId].name}</b><span>${ASSIST_TYPES[p.assist].tag}</span>` : `<b>—</b><span>LIBRE</span>`;
-      teamEl.appendChild(d);
-    }
-  }
   /* CPU o J2 en versus */
   if (Game.mode === 'versus') {
     const other = side === 1 ? Game.p2 : Game.p1;
@@ -3982,12 +3876,12 @@ function confirmPick() {
     ? CHAR[randomPool[Math.floor(Math.random() * randomPool.length)]]
     : ROSTER[state.focus];
   if (state.focus !== ROSTER.length && ((c.id === 'wzm' && !isMysticUnlocked()) || (c.id === 'mistikwiz' && !isMistikwizzUnlocked()) || (c.id === 'dcakuma' && !isDCAkumaUnlocked()) || (c.id === 'miguel1' && !isMiguel1Unlocked()))) { renderSelect(); return; }
-  state.picks.push({ charId: c.id, assist: state.assist });
+  state.picks = [{ charId: c.id }];
   Audio.sfx.select();
-  if (state.picks.length < 2) { renderSelect(); return; }
+  if (state.picks.length < 1) { renderSelect(); return; }
   if (Game.mode === 'versus' && side === 1) {
     Game.selectSide = 2;
-    Game.p2 = { picks: [], step: 0, assist: 'a', focus: 0 };
+    Game.p2 = { picks: [], step: 0, focus: 0 };
     renderSelect();
     return;
   }
@@ -4085,8 +3979,10 @@ function installBindings() {
       else if (a === 'controls') setScreen('controls');
       else if (a === 'menu') { Game.world = null; setScreen('menu'); }
       else if (a === 'continue') {
-        if (Game.mode === 'arcade') Game.advanceArcade();
-        else if (Game.mode === 'versus' || Game.mode === 'practice') Game.beginFight();
+        if (Game.mode === 'arcade') {
+          if (Game.arcadeComplete) { Game.world = null; Game.arcadeComplete = false; setScreen('menu'); }
+          else Game.advanceArcade();
+        } else if (Game.mode === 'versus' || Game.mode === 'practice') Game.beginFight();
         else setScreen('menu');
       }
     });
@@ -4134,9 +4030,6 @@ function installBindings() {
       else if (k === 'arrowup' || k === 'w') { state.focus = (state.focus - 4 + cardCount) % cardCount; renderSelect(); Audio.sfx.menu(); }
       else if (k === 'arrowdown' || k === 's') { state.focus = (state.focus + 4) % cardCount; renderSelect(); Audio.sfx.menu(); }
       else if (k === 'j' || k === 'enter' || k === ' ') confirmPick();
-      else if (k === 'q') { state.assist = 'a'; renderSelect(); }
-      else if (k === 'e') { state.assist = 'b'; renderSelect(); }
-      else if (k === 'r') { state.assist = 'g'; renderSelect(); }
       else if (k === 'escape') { Game.reset(); setScreen('menu'); }
     } else if (Game.screen === 'fight') {
       if (k === 'escape') { Game.world = null; setScreen('menu'); }
