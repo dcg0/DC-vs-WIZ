@@ -1480,6 +1480,9 @@ class Fighter {
     this.hitList = new Set();
     this.blocking = false;
     this.blockingLow = false;
+    this.guardActive = false;
+    this.guardStress = 0;
+    this.guardBrokenTimer = 0;
     this.invuln = 0;
     this.armor = 0;
     this.juggle = 0;
@@ -1662,6 +1665,24 @@ class Fighter {
       else this.comboHits = 0;
     }
 
+    if (this.guardBrokenTimer > 0) {
+      this.guardBrokenTimer--;
+      this.guardActive = false;
+      this.blocking = false;
+      this.blockingLow = false;
+      this.vx = 0;
+      this.vy = 0;
+      this.onGround = true;
+      this.y = GROUND_Y;
+      this.state = STATE.HITSTUN;
+      this.stateFrame = 0;
+      if (this.guardBrokenTimer === 0) {
+        this.guardStress = 0;
+        this.state = STATE.IDLE;
+      }
+      return;
+    }
+    if (!this.guardActive) this.guardStress = Math.max(0, this.guardStress - 0.28);
     if (this.state === STATE.KO) { this.updatePhysics(world); this.koFall(); return; }
     if (this.state === STATE.INTRO || this.state === STATE.WIN || this.state === STATE.TAGIN) {
       this.updatePhysics(world);
@@ -1692,6 +1713,8 @@ class Fighter {
       return;
     }
     if (this.state === STATE.BLOCKSTUN) {
+      this.guardActive = !!input?.dir?.down;
+      this.blocking = this.guardActive;
       this.vx *= 0.88;
       this.updatePhysics(world);
       if (input && input.btn && this.pressCount(input) >= 2 && this.guardPushTimer <= 0) this.advancingGuard(world);
@@ -1749,10 +1772,17 @@ class Fighter {
     const pick = this.chooseMove(input, world);
     if (pick) { this.chainUsed.clear(); this.airChainUsed.clear(); this.startMove(world, pick); return; }
 
-    /* Atrás ya no bloquea automáticamente: permite caminar libremente hacia
-     * cualquier lado. El bloqueo queda reservado para la acción explícita. */
-    this.blocking = false;
+    /* Mantener abajo activa la guardia: repele los golpes y acumula presión
+     * roja. Los ataques con abajo + botón se eligen arriba, antes de llegar aquí. */
+    this.guardActive = !!d.down;
+    this.blocking = this.guardActive;
     this.blockingLow = false;
+    if (this.guardActive) {
+      this.vx = 0;
+      if (this.onGround) this.setFreeState(STATE.CROUCH);
+      else if (this.state !== STATE.ATTACK) this.state = STATE.JUMP;
+      return;
+    }
 
     /* --- super salto: abajo y luego arriba dentro de la ventana --- */
     if (this.onGround && input.tapDir.up && this.lastTap.down !== undefined && world.frame - this.lastTap.down <= PHYS.superJumpWindow) {
@@ -1937,6 +1967,9 @@ class Fighter {
       Audio.sfx.special();
       this.specialEvadeTimer = 120;
     }
+    this.guardActive = false;
+    this.blocking = false;
+    this.blockingLow = false;
     this.state = STATE.ATTACK;
     this.stateFrame = 0;
     this.move = m;
@@ -2203,6 +2236,7 @@ class Fighter {
   }
 
   checkBlock(hit) {
+    if (this.guardActive) return true;
     if (hit.unblockable || hit.level === 'throw') return false;
     if (!this.onGround) {
       return this.blocking && hit.level !== 'low';
@@ -2214,8 +2248,28 @@ class Fighter {
   }
 
   blockHit(hit, attacker, hitPoint) {
-    const chip = hit.damage * (hit.unblockable ? 0 : hit.level === 'mid' ? 0.06 : 0.09);
+    const chip = this.guardActive ? 0 : hit.damage * (hit.unblockable ? 0 : hit.level === 'mid' ? 0.06 : 0.09);
     this.hp = Math.max(1, this.hp - chip);
+    if (this.guardActive) {
+      this.guardStress = clamp(this.guardStress + Math.max(7, (hit.damage || 6) * 2.4), 0, 100);
+      if (this.guardStress >= 100) {
+        this.guardBrokenTimer = 240;
+        this.guardActive = false;
+        this.blocking = false;
+        this.blockingLow = false;
+        this.vx = 0;
+        this.vy = 0;
+        this.onGround = true;
+        this.y = GROUND_Y;
+        this.state = STATE.HITSTUN;
+        this.stateFrame = 0;
+        spawnRing(this.x, this.y - 120, '#ff1738', 150, 0.5);
+        spawnSpark(this.x, this.y - 120, '#ff1738', 30, 1.4);
+        Audio.sfx.ko();
+        this.team?.world?.announce('GUARDIA ROTA · INMÓVIL 4 SEGUNDOS', 1.5);
+        return true;
+      }
+    }
     this.state = STATE.BLOCKSTUN;
     this.stateFrame = 0;
     this.stunFrames = hit.blockstun;
@@ -3008,6 +3062,12 @@ class World {
       if (!fighterHurtboxes(target).some((h) => overlap(box, h))) return;
     }
     const rayDamage = this.bossId === 'miguel2' ? target.maxHp * 0.10 : target.hp;
+    if (target.guardActive) {
+      target.blockHit({ damage: rayDamage, blockstun: 10, hitstop: 6, pushBlock: 7, level: 'mid' }, boss,
+        { x: target.x, y: target.y - 130 });
+      beam.hitDone = true;
+      return;
+    }
     target.hp = Math.max(0, target.hp - rayDamage);
     target.redHp = Math.min(target.maxHp - target.hp, target.redHp + rayDamage * 0.55);
     beam.hitDone = true;
@@ -3158,6 +3218,21 @@ const HUD = {
     grad.addColorStop(1, '#ff3b2f');
     g.fillStyle = grad; drawSeg(hpPct, true);
     g.restore();
+
+    /* Presión de guardia: se llena de rojo mientras se mantienen abajo los golpes. */
+    if (act.guardStress > 0) {
+      const guardY = y + barH + 5;
+      const guardPct = clamp(act.guardStress / 100, 0, 1);
+      g.save();
+      g.fillStyle = 'rgba(30,4,12,0.9)';
+      g.fillRect(x, guardY, barW, 7);
+      g.fillStyle = act.guardBrokenTimer > 0 ? '#ff1738' : '#d51f3e';
+      if (left) g.fillRect(x, guardY, barW * guardPct, 7);
+      else g.fillRect(x + barW - barW * guardPct, guardY, barW * guardPct, 7);
+      g.strokeStyle = 'rgba(255,80,100,0.75)'; g.lineWidth = 1;
+      g.strokeRect(x, guardY, barW, 7);
+      g.restore();
+    }
 
     /* Nombre */
     g.save();
