@@ -2312,6 +2312,9 @@ class Fighter {
     const natH = im.naturalHeight || im.height;
     const h = art.drawH;
     const w = natW * (h / natH);
+    const unconscious = this.guardBrokenTimer > 0;
+    const unconsciousFrame = 240 - this.guardBrokenTimer;
+    const unconsciousWobble = unconscious ? Math.sin(unconsciousFrame * 0.24) * 0.075 : 0;
 
     /* La dirección lógica siempre apunta al oponente: 1 = derecha, -1 = izquierda.
      * Los bancos crater/wero fueron dibujados mirando a la izquierda; los demás
@@ -2336,15 +2339,41 @@ class Fighter {
 
     g.save();
     g.translate(this.x, this.y + (art.feetPad || 0));
+    if (unconscious) g.rotate(unconsciousWobble);
     if (flip) g.scale(-1, 1);
     let filter = '';
     if (this.flashTimer > 0 && (this.flashTimer % 4) < 2) filter += 'brightness(2.6) saturate(0.2) ';
+    if (unconscious && (unconsciousFrame % 18) < 9) filter += 'sepia(1) saturate(3.4) hue-rotate(315deg) brightness(1.18) ';
     if (this.invuln > 0) g.globalAlpha *= 0.72;
     if (this.state === STATE.ATTACK && this.move && (this.move.type === 'hyper')) filter += `drop-shadow(0 0 18px ${this.move.color}) `;
     if (filter) g.filter = filter;
     g.drawImage(im, -w / 2, -h, w, h);
     g.filter = 'none';
     g.restore();
+    if (unconscious) {
+      /* Estrellas orbitando la cabeza: indican visualmente la inconsciencia. */
+      const phase = unconsciousFrame * 0.16;
+      g.save();
+      g.translate(this.x, this.y - h * 0.88);
+      for (let i = 0; i < 3; i++) {
+        const a = phase + i * (Math.PI * 2 / 3);
+        const sx = Math.cos(a) * (42 + i * 8);
+        const sy = Math.sin(a * 1.15) * 13 - 4;
+        const r = 7 + (i === 1 ? 2 : 0);
+        g.save();
+        g.translate(sx, sy);
+        g.rotate(a + Math.PI / 4);
+        g.fillStyle = i === 1 ? '#fff4a3' : '#ffd21f';
+        g.beginPath();
+        g.moveTo(0, -r); g.lineTo(r * 0.32, -r * 0.32);
+        g.lineTo(r, 0); g.lineTo(r * 0.32, r * 0.32);
+        g.lineTo(0, r); g.lineTo(-r * 0.32, r * 0.32);
+        g.lineTo(-r, 0); g.lineTo(-r * 0.32, -r * 0.32);
+        g.closePath(); g.fill();
+        g.restore();
+      }
+      g.restore();
+    }
   }
 
   drawBoxes() { /* depuración: se activa con la tecla de depuración */ }
