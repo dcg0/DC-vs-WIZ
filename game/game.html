@@ -940,6 +940,9 @@ const POSE = {
 POSE.dcnormal = POSE.dc;
 
 /* --- Carga de sprites + generación de paletas alternativas. --- */
+const MIGUEL1_AIR_ART = new Image();
+MIGUEL1_AIR_ART.src = 'assets/sprites/miguel1-air.png';
+
 const Art = {
   base: {},       // bank -> [{img|canvas}]
   variants: {},   // charId -> {frames:[canvas|img], w, h}
@@ -1317,6 +1320,14 @@ const MIGUEL1_MOVES = {
     },
     label: 'A · RAYO ROJO (99%)',
   }),
+  miguelAir: special({
+    id: 'miguelAir', name: 'IMPACTO AÉREO', pose: 0, startup: 7, active: 9, recovery: 18,
+    damage: 18, hitstun: 26, blockstun: 12, hitstop: 8, meter: 4,
+    color: '#ff6b2b', fx: 'burst', sfx: 'heavy', air: true, airOnlyTarget: true,
+    knockdown: true, airEnder: true,
+    boxes: [{ x: 38, y: -190, w: 188, h: 156 }],
+    label: 'AIRE + MP · IMPACTO AÉREO',
+  }),
 };
 function movesFor(charId) {
   if (charId === 'miguel1') return MIGUEL1_MOVES;
@@ -1394,6 +1405,11 @@ function spawnDoubleJumpFx(f) {
 }
 function spawnFloater(x, y, text, color, size = 34, life = 0.9) {
   Floaters.push({ x, y, text, color, size, life, age: 0 });
+}
+function spawnProjectileExplosion(x, y) {
+  spawnRing(x, y, '#fff6c7', 126, 0.30);
+  spawnRing(x, y, '#ff7a22', 88, 0.24);
+  spawnSpark(x, y, '#ffd21f', 34, 1.55);
 }
 function pushAfterimage(f) {
   const art = Art.get(f.charId);
@@ -1807,9 +1823,10 @@ class Fighter {
 
   chooseMove(input, world) {
     const m = this.moves;
-    /* Miguel 1 solo puede lanzar su rayo con A/LP; todos los demás botones
-     * ofensivos se ignoran deliberadamente para evitar golpes accidentales. */
+    /* Miguel 1 lanza el rayo con A/LP y usa MP en el aire para su impacto
+     * aéreo; los demás botones ofensivos se ignoran deliberadamente. */
     if (this.charId === 'miguel1') {
+      if (!this.onGround && input.tap.mp) return { id: 'miguelAir' };
       if (input.tap.lp) return { id: 'miguelRay' };
       return null;
     }
@@ -2233,7 +2250,9 @@ class Fighter {
       && this.maxHp > 0 && this.hp / this.maxHp <= 0.15 && art.deadFrames?.length;
     const frameSet = lowHealthMiguel ? art.deadFrames : art.frames;
     const idx = clamp(this.currentPoseIndex(), 0, frameSet.length - 1);
-    const im = frameSet[idx];
+    const moveArt = this.charId === 'miguel1' && this.state === STATE.ATTACK
+      && this.move?.id === 'miguelAir' && MIGUEL1_AIR_ART.complete ? MIGUEL1_AIR_ART : null;
+    const im = moveArt || frameSet[idx];
     if (!im) return;
     const natW = im.naturalWidth || im.width;
     const natH = im.naturalHeight || im.height;
@@ -2713,7 +2732,26 @@ class World {
   }
 
   /* ---------------- Resolución de golpes ---------------- */
+  resolveProjectileClashes() {
+    for (let i = 0; i < this.projectiles.length; i++) {
+      const a = this.projectiles[i];
+      if (a.dead) continue;
+      for (let j = i + 1; j < this.projectiles.length; j++) {
+        const b = this.projectiles[j];
+        if (b.dead) continue;
+        if (!overlap(a.box(), b.box())) continue;
+        const x = (a.x + b.x) * 0.5;
+        const y = (a.y + b.y) * 0.5;
+        a.dead = true;
+        b.dead = true;
+        spawnProjectileExplosion(x, y);
+        Audio.sfx.fireball();
+      }
+    }
+  }
+
   resolveHits() {
+    this.resolveProjectileClashes();
     for (const side of [1, 2]) {
       const atkTeam = this.teams[side];
       const defTeam = this.teams[side === 1 ? 2 : 1];
@@ -2726,6 +2764,7 @@ class World {
     }
     /* proyectiles */
     for (const pr of this.projectiles) {
+      if (pr.dead) continue;
       const defTeam = pr.team === this.teams[1] ? this.teams[2] : this.teams[1];
       const defenders = [defTeam.active, defTeam.assistActor].filter((d) => d && d.alive);
       const current = pr.box();
@@ -2787,6 +2826,7 @@ class World {
       for (const d of defenders) {
         if (d === a) continue;
         if (a.hitList.has(d)) continue;
+        if (m.airOnlyTarget && d.onGround) continue;
         if (d.invuln > 0) continue;
         const hurt = hurtCache.get(d) || [];
         for (const h of hurt) {
