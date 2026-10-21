@@ -2321,14 +2321,15 @@ class Projectile {
     g.shadowColor = this.color; g.shadowBlur = 26;
     g.fillStyle = this.color;
     g.translate(this.x, this.y);
+    const visualScale = 1.3;
     if (this.vertical) {
-      g.beginPath(); g.rect(-this.w*.24, -this.h*.5, this.w*.48, this.h); g.fill();
+      g.beginPath(); g.rect(-this.w*.24*visualScale, -this.h*.5, this.w*.48*visualScale, this.h); g.fill();
     } else {
       g.rotate(Math.atan2(this.vy, this.vx || this.facing));
-      g.beginPath(); g.ellipse(0, 0, this.w*.42, this.h*.42, 0, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.ellipse(0, 0, this.w*.42*visualScale, this.h*.42*visualScale, 0, 0, Math.PI*2); g.fill();
     }
     g.globalAlpha=0.9; g.fillStyle=this.vertical?'#8fc8ff':'#fff'; g.beginPath();
-    g.ellipse(0, 0, this.vertical?this.w*.12:this.w*.2, this.vertical?this.h*.28:this.h*.2, 0, 0, Math.PI*2); g.fill();
+    g.ellipse(0, 0, this.vertical?this.w*.12*visualScale:this.w*.2*visualScale, this.vertical?this.h*.28*visualScale:this.h*.2*visualScale, 0, 0, Math.PI*2); g.fill();
     g.restore();
   }
 }
