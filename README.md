@@ -1,4 +1,6 @@
 # clik enlace ala paguina del juego
+🔗https://gooey.ai/2/keyRb
+🔗https://gooey.ai/2/keyRb
 
 [![Deploy site to GitHub Pages](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml)
 [![Validate](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml)
