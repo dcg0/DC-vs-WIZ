@@ -737,7 +737,12 @@ const MIGUEL2_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDcAAAK0CAYAA
 const BANKS = {
   dc:     { frames: SPRITE_DATA.dc,      drawH: 306, feetPad: 8,  recolor: [[0.50, 0.74]] },
   dcnormal: { frames: SPRITE_DATA.dcnormal, drawH: 306, feetPad: 8, recolor: [] },
-  miguel1: { frames: [MIGUEL1_SRC], drawH: 430, feetPad: 8, recolor: [] },
+  miguel1: { frames: [MIGUEL1_SRC,
+    'assets/sprites/miguel1/miguel1-punch-windup.png',
+    'assets/sprites/miguel1/miguel1-punch-impact.png',
+    'assets/sprites/miguel1/miguel1-punch-recovery.png',
+    'assets/sprites/miguel1/miguel1-kick-chamber.png',
+    'assets/sprites/miguel1/miguel1-kick-impact.png'], drawH: 430, feetPad: 8, recolor: [] },
   dcazul: { frames: Array.from({length: 6}, (_, i) => `assets/sprites/dcazul/dcazul-${i + 1}.png`), drawH: 306, feetPad: 5, recolor: [] },
   dcrojo: { frames: Array.from({length: 8}, (_, i) => `assets/sprites/dcrojo/dcrojo-${i + 1}.png`), drawH: 306, feetPad: 5, recolor: [] },
   /* WIZ y WIZZ comparten un banco de 7 poses; antes WIZ cargaba una sola imagen. */
@@ -941,7 +946,7 @@ POSE.dcnormal = POSE.dc;
 
 /* --- Carga de sprites + generación de paletas alternativas. --- */
 const MIGUEL1_AIR_ART = new Image();
-MIGUEL1_AIR_ART.src = 'assets/sprites/miguel1-air.png';
+MIGUEL1_AIR_ART.src = 'assets/sprites/miguel1/miguel1-air-impact.png';
 
 const Art = {
   base: {},       // bank -> [{img|canvas}]
@@ -1306,9 +1311,15 @@ const MOVES = {
   noir: buildMoves('noir'), miguel2: buildMoves('miguel2'),
   manuelin: buildMoves('manuelin'), toto: buildMoves('toto'), wero: buildMoves('wero'), yiyo: buildMoves('yiyo'),
 };
-/* Miguel 1 jugable: no tiene golpes, combos, especiales ni hipercombos.
- * Su único botón ofensivo es LP/A y dispara un rayo rojo imbloqueable. */
+/* Miguel 1 usa golpes y patadas normales con sprites propios; conserva
+ * su rayo rojo y el impacto aéreo como movimientos especiales. */
+const MIGUEL1_NORMALS = Object.fromEntries([
+  'sLP', 'sMP', 'sHP', 'sLK', 'sMK', 'sHK',
+  'cLP', 'cMP', 'cHP', 'cLK', 'cMK', 'cHK',
+  'jLP', 'jMP', 'jHP', 'jLK', 'jMK', 'jHK',
+].map((id) => [id, MOVES.dc[id]]));
 const MIGUEL1_MOVES = {
+  ...MIGUEL1_NORMALS,
   miguelRay: special({
     id: 'miguelRay', name: 'RAYO ROJO', pose: 0, startup: 14, active: 6, recovery: 30,
     damage: 0, hitstun: 28, blockstun: 0, hitstop: 12, meter: 0,
@@ -1318,7 +1329,7 @@ const MIGUEL1_MOVES = {
       hitstun: 28, blockstun: 0, hitstop: 12, color: '#ff1738', life: 110,
       level: 'mid', pierce: 0, unblockable: true,
     },
-    label: 'A · RAYO ROJO (99%)',
+    label: 'Q / 7 · RAYO ROJO (99%)',
   }),
   miguelAir: special({
     id: 'miguelAir', name: 'IMPACTO AÉREO', pose: 0, startup: 7, active: 9, recovery: 18,
@@ -1335,7 +1346,7 @@ function movesFor(charId) {
   return MOVES[bank] || MOVES[bank === 'dcnormal' ? 'dc' : 'noir'];
 }
 function assistsFor(charId) {
-  /* Miguel 1 no puede atacar como asistente: solo movimiento y rayo propio. */
+  /* Miguel 1 no entra como asistente; Q/7 activa su rayo propio. */
   if (charId === 'miguel1') return ['a', 'b', 'g'].map((key) => special({
     id: `miguel1NoAssist${key.toUpperCase()}`, name: 'SIN ASISTENCIA', pose: 0,
     startup: 1, active: 1, recovery: 1, damage: 0, boxes: [], meter: 0,
@@ -1612,6 +1623,14 @@ class Fighter {
         if (wiz) return wizAttack(m);
         if (normalWizz) return wizzAttack(m);
         if (mystic) return mysticAttack(m);
+        if (this.charId === 'miguel1' && m.type === 'normal') {
+          const basicButton = /(?:lp|mp|hp|lk|mk|hk)/.exec(String(m.id || '').toLowerCase())?.[0];
+          if (basicButton) {
+            const phase = this.moveFrame < m.startup ? 0
+              : (this.moveFrame < m.startup + m.active ? 1 : 2);
+            return /^(?:lk|mk|hk)$/.test(basicButton) ? [4, 5, 0][phase] : [1, 2, 3][phase];
+          }
+        }
         const pose = typeof m.pose === 'number' ? m.pose : P[m.pose];
         if (pose === undefined) return scalar('idle');
         // Los bancos tradicionales tienen una pose por golpe. Animamos la entrada,
@@ -1853,12 +1872,11 @@ class Fighter {
 
   chooseMove(input, world) {
     const m = this.moves;
-    /* Miguel 1 lanza el rayo con A/LP y usa MP en el aire para su impacto
-     * aéreo; los demás botones ofensivos se ignoran deliberadamente. */
+    /* Miguel 1: MP aéreo y Q/7 para el rayo; los seis botones normales
+     * pasan al selector estándar para conservar también comandos de IA. */
     if (this.charId === 'miguel1') {
       if (!this.onGround && input.tap.mp) return { id: 'miguelAir' };
-      if (input.tap.lp) return { id: 'miguelRay' };
-      return null;
+      if (input.tap.assistA) return { id: 'miguelRay' };
     }
     /* Comandos inyectados por la IA (evita simular la línea de tiempo). */
     if (input._motion) {
