@@ -1348,6 +1348,8 @@ const MIGUEL1_NORMALS = Object.fromEntries([
 ].map((id) => [id, MOVES.dc[id]]));
 const MIGUEL1_MOVES = {
   ...MIGUEL1_NORMALS,
+  spProj: MOVES.dc.spProj,
+  spProjUp: MOVES.dc.spProjUp,
   miguelRay: special({
     id: 'miguelRay', name: 'RAYO ROJO', pose: 0, startup: 14, active: 6, recovery: 30,
     damage: 0, hitstun: 28, blockstun: 0, hitstop: 12, meter: 0,
@@ -2486,6 +2488,10 @@ function fighterHurtboxes(f) {
 
 /* ======================= PROYECTILES =================================== */
 
+/* Tamaño deliberadamente grande: afecta tanto el render como la caja de colisión. */
+const PROJECTILE_SIZE_MULTIPLIER = 2.4;
+const MIGUEL_RED_RAY_SIZE_MULTIPLIER = 3.5;
+
 class Projectile {
   constructor(owner, spec, move) {
     this.owner = owner;
@@ -2496,7 +2502,11 @@ class Projectile {
     this.y = owner.y + spec.y;
     this.vx = (spec.vx || 0) * owner.facing;
     this.vy = spec.vy || 0; this.vertical = !!spec.vertical;
-    this.w = spec.w; this.h = spec.h;
+    const sizeMultiplier = move?.id === 'miguelRay'
+      ? MIGUEL_RED_RAY_SIZE_MULTIPLIER
+      : PROJECTILE_SIZE_MULTIPLIER;
+    this.w = Number.isFinite(spec.w) ? spec.w * sizeMultiplier : spec.w;
+    this.h = Number.isFinite(spec.h) ? spec.h * sizeMultiplier : spec.h;
     this.dmg = spec.damage; this.percentMaxHp = spec.percentMaxHp || 0; this.unblockable = !!spec.unblockable;
     this.hitstun = spec.hitstun; this.blockstun = spec.blockstun;
     this.hitstop = spec.hitstop; this.color = spec.color; this.level = spec.level;
