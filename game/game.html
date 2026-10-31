@@ -229,6 +229,9 @@
             <span>Tanque lleno · adelante + R1/HK : hiper de avance</span>
             <span>Bloqueo + 2 botones : avance defensivo</span>
             <span>Golpe fuerte en el aire : remate aéreo</span>
+            <span>Miguel 1: Q / 7 (LT) : rayo rojo</span>
+            <span>Miguel 1: E / 8 (RT) : forma gigante · 6 s (recarga 15 s)</span>
+            <span>Jefe Miguel 1: transformación automática al 50 % de vida</span>
           </div>
         </div>
         <div style="margin-top:1em;">
@@ -955,6 +958,7 @@ const Art = {
   boss1: null,
   boss2: null,
   deadMiguel: null,
+  giantMiguel1: null,
   total: 0, done: 0,
 
   load(onProgress) {
@@ -976,10 +980,11 @@ const Art = {
     const boss1P = bossP(MIGUEL1_SRC, 'boss1');
     const boss2P = bossP(MIGUEL2_SRC, 'boss2');
     const deadMiguelP = bossP(DEAD_MIGUEL_SRC, 'deadMiguel');
+    const giantMiguel1P = bossP('assets/sprites/miguel1/miguel1-giant-form.png', 'giantMiguel1');
     const baseJobs = Object.entries(this.base).map(async ([name, frames]) => {
       this.base[name] = (await Promise.all(frames)).filter(Boolean);
     });
-    return Promise.all([...baseJobs, boss1P, boss2P, deadMiguelP]).then(() => this.buildVariants());
+    return Promise.all([...baseJobs, boss1P, boss2P, deadMiguelP, giantMiguel1P]).then(() => this.buildVariants());
   },
 
   /* Recolorea únicamente la ropa: los píxeles cuya tonalidad cae dentro del
@@ -1039,6 +1044,10 @@ const Art = {
        * todos los sprites disponibles y permite que el menú abra de inmediato. */
       const frames = src;
       this.variants[ch.id] = { frames, drawH: def.drawH, feetPad: def.feetPad };
+    }
+    if (this.variants.miguel1 && this.giantMiguel1) {
+      this.variants.miguel1.giantFrame = this.giantMiguel1;
+      this.variants.miguel1.giantDrawH = 580;
     }
   },
 
@@ -1312,7 +1321,7 @@ const MOVES = {
   manuelin: buildMoves('manuelin'), toto: buildMoves('toto'), wero: buildMoves('wero'), yiyo: buildMoves('yiyo'),
 };
 /* Miguel 1 usa golpes y patadas normales con sprites propios; conserva
- * su rayo rojo y el impacto aéreo como movimientos especiales. */
+ * el rayo, el impacto aéreo y su forma gigante temporal. */
 const MIGUEL1_NORMALS = Object.fromEntries([
   'sLP', 'sMP', 'sHP', 'sLK', 'sMK', 'sHK',
   'cLP', 'cMP', 'cHP', 'cLK', 'cMK', 'cHK',
@@ -1338,6 +1347,12 @@ const MIGUEL1_MOVES = {
     knockdown: true, airEnder: true,
     boxes: [{ x: 38, y: -190, w: 188, h: 156 }],
     label: 'AIRE + MP · IMPACTO AÉREO',
+  }),
+  miguelGiant: special({
+    id: 'miguelGiant', name: 'FORMA GIGANTE', pose: 0, startup: 12, active: 1, recovery: 18,
+    damage: 0, hitstun: 0, blockstun: 0, hitstop: 0, meter: 0, cancel: [],
+    color: '#a96bff', fx: 'burst', sfx: 'special', boxes: [],
+    label: 'E / 8 (RT) · FORMA GIGANTE · 6 S',
   }),
 };
 function movesFor(charId) {
@@ -1513,6 +1528,11 @@ class Fighter {
     this.getupInvuln = 0;
     this.poseIndex = 0;
     this.assistCooldown = 0;
+    this.giantFormTimer = 0;
+    this.giantFormCooldown = 0;
+    this.giantTransformAge = 0;
+    this.giantFormPermanent = false;
+    this.giantFormBossTriggered = false;
     this.ai = null;
   }
 
@@ -1672,6 +1692,25 @@ class Fighter {
     this.guardPushTimer = Math.max(0, this.guardPushTimer - 1);
     this.getupInvuln = Math.max(0, this.getupInvuln - 1);
     this.specialEvadeTimer = Math.max(0, this.specialEvadeTimer - 1);
+    const giantExpiring = !this.giantFormPermanent && this.giantFormTimer === 1;
+    if (!this.giantFormPermanent) this.giantFormTimer = Math.max(0, this.giantFormTimer - 1);
+    this.giantFormCooldown = Math.max(0, this.giantFormCooldown - 1);
+    const giantGrowing = this.giantFormTimer > 0 || this.giantFormPermanent;
+    this.giantTransformAge = giantGrowing ? Math.min(24, this.giantTransformAge + 1) : 0;
+    if (giantExpiring) spawnRing(this.x, this.y - 120, '#a96bff', 110, 0.32);
+    if (this.charId === 'miguel1' && this.isBoss && !this.giantFormBossTriggered
+      && this.hp > 0 && this.maxHp > 0 && this.hp / this.maxHp <= 0.5) {
+      this.giantFormBossTriggered = true;
+      this.giantFormPermanent = true;
+      this.giantFormTimer = 0;
+      this.giantFormCooldown = 0;
+      this.giantTransformAge = 0;
+      this.vx = 0;
+      Audio.sfx.special();
+      world.announce?.('MIGUEL DESATA SU FORMA GIGANTE', 2.2);
+      spawnRing(this.x, this.y - 180, '#a96bff', 220, 0.6);
+      spawnRing(this.x, GROUND_Y - 28, '#ff4f9a', 170, 0.48);
+    }
     this.stateFrame++;
 
     if (input) {
@@ -1877,6 +1916,8 @@ class Fighter {
     if (this.charId === 'miguel1') {
       if (!this.onGround && input.tap.mp) return { id: 'miguelAir' };
       if (input.tap.assistA) return { id: 'miguelRay' };
+      if (input.tap.assistB && this.onGround && !this.giantFormPermanent && this.giantFormCooldown <= 0
+        && Art.get('miguel1').giantFrame?.complete) return { id: 'miguelGiant' };
     }
     /* Comandos inyectados por la IA (evita simular la línea de tiempo). */
     if (input._motion) {
@@ -1983,7 +2024,15 @@ class Fighter {
     }
     if (m.type === 'special') {
       Audio.sfx.special();
-      this.specialEvadeTimer = 120;
+      if (m.id !== 'miguelGiant') this.specialEvadeTimer = 120;
+    }
+    if (m.id === 'miguelGiant') {
+      this.giantFormTimer = 360;
+      this.giantFormCooldown = 900;
+      this.giantTransformAge = 0;
+      this.vx = 0;
+      spawnRing(this.x, this.y - 180, '#a96bff', 190, 0.55);
+      spawnRing(this.x, GROUND_Y - 28, '#ff4f9a', 140, 0.42);
     }
     this.guardActive = false;
     this.blocking = false;
@@ -2320,15 +2369,27 @@ class Fighter {
     if (!art.frames.length) return;
     const lowHealthMiguel = (this.charId === 'miguel1' || this.charId === 'miguel2')
       && this.maxHp > 0 && this.hp / this.maxHp <= 0.15 && art.deadFrames?.length;
-    const frameSet = lowHealthMiguel ? art.deadFrames : art.frames;
+    const giantActive = this.charId === 'miguel1'
+      && (this.giantFormTimer > 0 || this.giantFormPermanent) && art.giantFrame?.complete;
+    const showDeathForm = lowHealthMiguel && (!giantActive || this.state === STATE.KO);
+    const frameSet = showDeathForm ? art.deadFrames : art.frames;
     const idx = clamp(this.currentPoseIndex(), 0, frameSet.length - 1);
     const moveArt = this.charId === 'miguel1' && this.state === STATE.ATTACK
       && this.move?.id === 'miguelAir' && MIGUEL1_AIR_ART.complete ? MIGUEL1_AIR_ART : null;
-    const im = moveArt || frameSet[idx];
+    const giantPose = giantActive && (this.state === STATE.IDLE || this.state === STATE.WALK
+      || this.state === STATE.CROUCH || (this.state === STATE.ATTACK && this.move?.id === 'miguelGiant'));
+    const im = giantPose ? art.giantFrame : (moveArt || frameSet[idx]);
     if (!im) return;
     const natW = im.naturalWidth || im.width;
     const natH = im.naturalHeight || im.height;
-    const h = art.drawH;
+    const growth = giantActive ? Math.min(1, this.giantTransformAge / 24) : 0;
+    const giantDrawH = art.giantDrawH || Math.round(art.drawH * 1.35);
+    const giantFillY = 11 / 12;
+    const h = giantActive
+      ? (giantPose
+        ? art.drawH / giantFillY + (giantDrawH - art.drawH / giantFillY) * growth
+        : art.drawH + (giantDrawH - art.drawH) * growth)
+      : art.drawH;
     const w = natW * (h / natH);
     const unconscious = this.guardBrokenTimer > 0;
     const unconsciousFrame = 240 - this.guardBrokenTimer;
@@ -2364,6 +2425,7 @@ class Fighter {
     if (unconscious && (unconsciousFrame % 18) < 9) filter += 'sepia(1) saturate(3.4) hue-rotate(315deg) brightness(1.18) ';
     if (this.invuln > 0) g.globalAlpha *= 0.72;
     if (this.state === STATE.ATTACK && this.move && (this.move.type === 'hyper')) filter += `drop-shadow(0 0 18px ${this.move.color}) `;
+    if (giantActive) filter += 'drop-shadow(0 0 18px #a96bff) ';
     if (filter) g.filter = filter;
     g.drawImage(im, -w / 2, -h, w, h);
     g.filter = 'none';
