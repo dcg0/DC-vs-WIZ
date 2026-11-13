@@ -4,7 +4,7 @@
 
 [![Deploy site to GitHub Pages](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/pages.yml)
 [![Validate](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml)
+[![CodeQL](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml/badge.svg)](https://github.com/dcg0/DC-vs-WIZ/actions/workflows/codeql.yml) [![Política de seguridad](https://img.shields.io/badge/Seguridad-SECURITY.md-157a53?logo=github)](SECURITY.md)
 🔗https://dcg0.github.io/DC-vs-WIZ/
 # ve al enlace🤔🧐🙄 te lleva demo
 ![Imagen 1](Imagen%201.png)
